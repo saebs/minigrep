@@ -1,8 +1,7 @@
+extern crate minigrep;
 use std::env;
-use std::fs::File;
-use std::io::prelude::*;
 use std::process;
-use std::error::Error;
+use minigrep::Config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -15,62 +14,9 @@ fn main() {
     println!("Searching  for {}", config.query);
     println!("In file {}", config.filename);
 
-    run(config); // Extracting logic from main.rs
+    if let Err(e) = minigrep::run(config) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }; 
 
 }
-
-fn run(config: Config) -> Result<(), Box<Error>> {
-    let mut f = File::open(config.filename)?;
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)?;
-    println!("With text:\n{}", contents);
-    Ok(())
-}
-
-struct Config {
-    query: String,
-    filename: String,
-}
-impl Config {
-    fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
-        let query = args[1].clone();
-        let filename = args[2].clone();
-        Ok(Config { query, filename })
-    }
-}
-
-
-
-
-
-
-
-
-
-/* // non idiomatic error handling with panic
-impl Config {
-    fn new(args: &[String]) -> Config {
-        if args.len() < 3 {
-            panic!("not enough arguments");
-        }
-        let query = args[1].clone();
-        let filename = args[2].clone();
-        Config { query, filename }
-    }
-} */
-
-//  fn parse_config(args: &[String]) -> (&str, &str) {
-//     let query = &args[1];
-//     let filename = &args[2];
-//     (query, filename)
-//  }
-
-/* // old to idiomatic new
-//  fn parse_config(args: &[String]) -> Config {
-//     let query = args[1].clone();
-//     let filename = args[2].clone();
-//     Config { query, filename }
-//  } */
