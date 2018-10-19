@@ -2,28 +2,15 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::process;
+use std::error::Error;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-
-    // old code below
-    // let queary = &args[1]; 
-    // let filename = &args[2];
-    // old code
-    // let (query, filename) = parse_config(&args);
-
-/*     // old code
-    let config = parse_config(&args); */
-
 
     let config = Config::new(&args).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
-
-// old code
-    // println!("Searching  for {}", query);
-    // println!("In file {}", filename);
 
     println!("Searching  for {}", config.query);
     println!("In file {}", config.filename);
@@ -32,11 +19,12 @@ fn main() {
 
 }
 
-fn run(config: Config) {
-    let mut f = File::open(config.filename).expect("File not found");
+fn run(config: Config) -> Result<(), Box<Error>> {
+    let mut f = File::open(config.filename)?;
     let mut contents = String::new();
-    f.read_to_string(&mut contents).expect("Sometihng went wrong reading the file");
+    f.read_to_string(&mut contents)?;
     println!("With text:\n{}", contents);
+    Ok(())
 }
 
 struct Config {
@@ -53,6 +41,15 @@ impl Config {
         Ok(Config { query, filename })
     }
 }
+
+
+
+
+
+
+
+
+
 /* // non idiomatic error handling with panic
 impl Config {
     fn new(args: &[String]) -> Config {
