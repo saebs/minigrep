@@ -28,14 +28,15 @@ fn main() {
     println!("Searching  for {}", config.query);
     println!("In file {}", config.filename);
 
-    // Reading a file
+    run(config); // Extracting logic from main.rs
+
+}
+
+fn run(config: Config) {
     let mut f = File::open(config.filename).expect("File not found");
     let mut contents = String::new();
     f.read_to_string(&mut contents).expect("Sometihng went wrong reading the file");
     println!("With text:\n{}", contents);
-
-    // Refactoring to Improve Modularity and Error Handling.
-    
 }
 
 struct Config {
