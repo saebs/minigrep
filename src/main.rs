@@ -11,7 +11,11 @@ fn main() {
     // old code
     // let (query, filename) = parse_config(&args);
 
-    let config = parse_config(&args);
+/*     // old code
+    let config = parse_config(&args); */
+
+    
+    let config = Config::new(&args);
 
 // old code
     // println!("Searching  for {}", query);
@@ -34,6 +38,13 @@ struct Config {
     query: String,
     filename: String,
 }
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
+        Config { query, filename }
+    }
+}
 
 //  fn parse_config(args: &[String]) -> (&str, &str) {
 //     let query = &args[1];
@@ -41,8 +52,9 @@ struct Config {
 //     (query, filename)
 //  }
 
- fn parse_config(args: &[String]) -> Config {
-    let query = args[1].clone();
-    let filename = args[2].clone();
-    Config { query, filename }
- }
+/* // old to idiomatic new
+//  fn parse_config(args: &[String]) -> Config {
+//     let query = args[1].clone();
+//     let filename = args[2].clone();
+//     Config { query, filename }
+//  } */
